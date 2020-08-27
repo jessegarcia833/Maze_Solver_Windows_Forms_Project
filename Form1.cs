@@ -22,12 +22,9 @@ namespace Maze_Game
         List<Tuple<int, int>> currentPositions = new List<Tuple<int, int>>();
         List<Tuple<int, int>> solution = new List<Tuple<int, int>>();
 
-        bool isBfs = false;
-        bool isUfs = false;
-        bool isAstar = false;
-
         bool isMaze1 = false;
         bool isMaze2 = false;
+        bool isMaze3 = false;
 
         char[,] goalState = new char[20, 20];
         char[,] maze1Char = new char[20, 20] {
@@ -76,84 +73,42 @@ namespace Maze_Game
                 { 'X', 'X', 'X', 'C', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'}
             };
 
+        char[,] maze3Char = new char[20, 20];
+               
+
         public Form1()
         {
             this.KeyPreview = true;
             InitializeComponent();
             GenerateMaze();
-            solveButton.Enabled = false;
         }
 
-        private void SolveMaze()
+        private void GenerateMaze3()
         {
-            if(isBfs && isMaze1)
+            Random rnd = new Random();
+           
+            for (int i = 0; i < maze3Char.GetLength(0); i++)
             {
-                Maze m = new Maze(maze1Char);
-                Artificial_Intelligence ai = new Artificial_Intelligence();
-                SetGoalMaze();
-                ai.SetGoalState(goalState);
-                ai.BFS(m);
-                currentPositions = ai.GetPositions();
-                solution = ai.GetSolution();
-                UpdateGUI();
-            }
-            else if(isUfs && isMaze1)
-            {
-                Maze m = new Maze(maze1Char);
-                Artificial_Intelligence ai = new Artificial_Intelligence();
-                SetGoalMaze();
-                ai.SetGoalState(goalState);
-                ai.UFS(m);
-                currentPositions = ai.GetPositions();
-                solution = ai.GetSolution();
-                UpdateGUI();
-            }
-            else if(isAstar && isMaze1)
-            {
-                Maze m = new Maze(maze1Char);
-                Artificial_Intelligence ai = new Artificial_Intelligence();
-                SetGoalMaze();
-                ai.SetGoalState(goalState);
-                ai.AStar(m);
-                currentPositions = ai.GetPositions();
-                solution = ai.GetSolution();
-                UpdateGUI();
-            }
-            else if (isBfs && isMaze2)
-            {
-                Maze m = new Maze(maze2Char);
-                Artificial_Intelligence ai = new Artificial_Intelligence();
-                SetGoalMaze();
-                ai.SetGoalState(goalState);
-                ai.BFS(m);
-                currentPositions = ai.GetPositions();
-                solution = ai.GetSolution();
-                UpdateGUI();
-            }
-            else if (isUfs && isMaze2)
-            {
-                Maze m = new Maze(maze2Char);
-                Artificial_Intelligence ai = new Artificial_Intelligence();
-                SetGoalMaze();
-                ai.SetGoalState(goalState);
-                ai.UFS(m);
-                currentPositions = ai.GetPositions();
-                solution = ai.GetSolution();
-                UpdateGUI();
+                for (int j = 0; j < maze3Char.GetLength(1); j++)
+                {
+                    int number = rnd.Next(4);
+                    if (number == 0)
+                    {
+                        maze3Char[i, j] = 'X';
+                    }
+                    else
+                    {
+                        maze3Char[i, j] = '-';
+                    }
+                }
             }
 
-            else if (isAstar && isMaze2)
-            {
-                Maze m = new Maze(maze2Char);
-                Artificial_Intelligence ai = new Artificial_Intelligence();
-                SetGoalMaze();
-                ai.SetGoalState(goalState);
-                ai.AStar(m);
-                currentPositions = ai.GetPositions();
-                solution = ai.GetSolution();
-                UpdateGUI();
-            }
-        
+           int start = rnd.Next(20);
+           int goal = rnd.Next(20);
+
+           maze3Char[start, 0] = 'C';
+           maze3Char[goal, 19] = 'E';
+
         }
         private void SetGoalMaze()
         {
@@ -187,50 +142,25 @@ namespace Maze_Game
                     }
                 }
             }
-        }
-
-        private void SetMaze()
-        {
-            solveButton.Enabled = true;
-
-            if (isMaze1)
+            else if (isMaze3)
             {
-                for (int i = 0; i < maze.GetLength(0); i++)
+                for (int i = 0; i < maze3Char.GetLength(0); i++)
                 {
-                    for (int j = 0; j < maze.GetLength(1); j++)
+                    for (int j = 0; j < maze3Char.GetLength(1); j++)
                     {
-                        if (maze1Char[i, j] == '-')
-                            maze[i, j].BackColor = Color.White;
-                        else if (maze1Char[i, j] == 'X')
-                            maze[i, j].BackColor = Color.Black;
-                        else if (maze1Char[i, j] == 'C')
-                            maze[i, j].BackColor = Color.Blue;
-                        else if (maze1Char[i, j] == 'E')
-                            maze[i, j].BackColor = Color.Green;
-                    }
-                }
-            }
-            else if(isMaze2)
-            {
-                for (int i = 0; i < maze.GetLength(0); i++)
-                {
-                    for (int j = 0; j < maze.GetLength(1); j++)
-                    {
-                        if (maze2Char[i, j] == '-')
-                            maze[i, j].BackColor = Color.White;
-                        else if (maze2Char[i, j] == 'X')
-                            maze[i, j].BackColor = Color.Black;
-                        else if (maze2Char[i, j] == 'C')
-                            maze[i, j].BackColor = Color.Blue;
-                        else if (maze2Char[i, j] == 'E')
-                            maze[i, j].BackColor = Color.Green;
+                        if (maze3Char[i, j] == 'E')
+                            goalState[i, j] = 'C';
+                        else if (maze3Char[i, j] == 'C')
+                            goalState[i, j] = '-';
+                        else
+                            goalState[i, j] = maze3Char[i, j];
                     }
                 }
             }
         }
         private void GenerateMaze()
         {
-            int xAxis = 60;
+            int xAxis = 250;
             int yAxis = 100;
 
             for (int i = 0; i < maze.GetLength(0); i++)
@@ -249,7 +179,7 @@ namespace Maze_Game
                     xAxis += 30;
                 }
 
-                xAxis = 60;
+                xAxis = 250;
                 yAxis += 30;
             }
 
@@ -265,7 +195,7 @@ namespace Maze_Game
 
             foreach (var tuple in solution)
             {
-                await Task.Delay(15);
+                await Task.Delay(20);
                 maze[tuple.Item1, tuple.Item2].BackColor = Color.Green;
             }
         }
@@ -275,22 +205,12 @@ namespace Maze_Game
             currentPositions.Clear();
             solution.Clear();
             ResetBoard();
-            solveButton.Enabled = false;
-
-            isBfs = false;
-            isUfs = false;
-            isAstar = false;
 
             isMaze1 = false;
             isMaze2 = false;
+            isMaze3 = false;
 
         }
-
-        private void solveButton_Click(object sender, EventArgs e)
-        {
-            SolveMaze();
-        }
-
         private void ResetBoard()
         {
             for (int i = 0; i < maze.GetLength(0); i++)
@@ -302,67 +222,183 @@ namespace Maze_Game
             }
         }
 
-        private void bfsRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            RadioButton rb = sender as RadioButton;
 
-            if (rb.Checked)
+        private void mazeOneButton_Click(object sender, EventArgs e)
+        {
+            isMaze1 = true;
+            isMaze2 = false;
+            isMaze3 = false;
+
+            for (int i = 0; i < maze.GetLength(0); i++)
             {
-                isBfs = true;
-                isUfs = false;
-                isAstar = false;
+                for (int j = 0; j < maze.GetLength(1); j++)
+                {
+                    if (maze1Char[i, j] == '-')
+                        maze[i, j].BackColor = Color.White;
+                    else if (maze1Char[i, j] == 'X')
+                        maze[i, j].BackColor = Color.Black;
+                    else if (maze1Char[i, j] == 'C')
+                        maze[i, j].BackColor = Color.Blue;
+                    else if (maze1Char[i, j] == 'E')
+                        maze[i, j].BackColor = Color.Green;
+                }
             }
         }
 
-        private void ufsRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void mazeTwoButton_Click(object sender, EventArgs e)
         {
-            RadioButton rb = sender as RadioButton;
+            isMaze1 = false;
+            isMaze2 = true;
+            isMaze3 = false;
 
-            if (rb.Checked)
+            for (int i = 0; i < maze.GetLength(0); i++)
             {
-                isBfs = false;
-                isUfs = true;
-                isAstar = false;
+                for (int j = 0; j < maze.GetLength(1); j++)
+                {
+                    if (maze2Char[i, j] == '-')
+                        maze[i, j].BackColor = Color.White;
+                    else if (maze2Char[i, j] == 'X')
+                        maze[i, j].BackColor = Color.Black;
+                    else if (maze2Char[i, j] == 'C')
+                        maze[i, j].BackColor = Color.Blue;
+                    else if (maze2Char[i, j] == 'E')
+                        maze[i, j].BackColor = Color.Green;
+                }
             }
         }
 
-        private void aStarRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void mazeThreeButton_Click(object sender, EventArgs e)
         {
-            RadioButton rb = sender as RadioButton;
+            isMaze1 = false;
+            isMaze2 = false;
+            isMaze3 = true;
+            GenerateMaze3();
 
-            if (rb.Checked)
+            for (int i = 0; i < maze.GetLength(0); i++)
             {
-                isBfs = false;
-                isUfs = false;
-                isAstar = true;
+                for (int j = 0; j < maze.GetLength(1); j++)
+                {
+                    if (maze3Char[i, j] == '-')
+                        maze[i, j].BackColor = Color.White;
+                    else if (maze3Char[i, j] == 'X')
+                        maze[i, j].BackColor = Color.Black;
+                    else if (maze3Char[i, j] == 'C')
+                        maze[i, j].BackColor = Color.Blue;
+                    else if (maze3Char[i, j] == 'E')
+                        maze[i, j].BackColor = Color.Green;
+                }
             }
         }
 
-        private void maze1RadioButton_CheckedChanged(object sender, EventArgs e)
+        private void bfsButton_Click(object sender, EventArgs e)
         {
-            RadioButton rb = sender as RadioButton;
-
-            if (rb.Checked)
+            if (isMaze1)
             {
-                isMaze1 = true;
-                isMaze2 = false;
+                Maze m = new Maze(maze1Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.BFS(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
+            else if (isMaze2)
+            {
+                Maze m = new Maze(maze2Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.BFS(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
+            else if (isMaze3)
+            {
+                Maze m = new Maze(maze3Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.BFS(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
             }
         }
 
-        private void maze2RadioButton_CheckedChanged(object sender, EventArgs e)
+        private void ufsButton_Click(object sender, EventArgs e)
         {
-            RadioButton rb = sender as RadioButton;
-
-            if (rb.Checked)
+            if (isMaze1)
             {
-                isMaze1 = false;
-                isMaze2 = true;
+                Maze m = new Maze(maze1Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.UFS(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
+            else if (isMaze2)
+            {
+                Maze m = new Maze(maze2Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.UFS(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
+            else if (isMaze3)
+            {
+                Maze m = new Maze(maze3Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.UFS(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
             }
         }
-    
-        private void setMazeButton_Click(object sender, EventArgs e)
+
+        private void aStarButton_Click(object sender, EventArgs e)
         {
-            SetMaze();
+            if (isMaze1)
+            {
+                Maze m = new Maze(maze1Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.AStar(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
+            else if (isMaze2)
+            {
+                Maze m = new Maze(maze2Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.AStar(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
+            else if (isMaze3)
+            {
+                Maze m = new Maze(maze3Char);
+                Artificial_Intelligence ai = new Artificial_Intelligence();
+                SetGoalMaze();
+                ai.SetGoalState(goalState);
+                ai.AStar(m);
+                currentPositions = ai.GetPositions();
+                solution = ai.GetSolution();
+                UpdateGUI();
+            }
         }
     }
 }
